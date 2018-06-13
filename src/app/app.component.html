@@ -1,0 +1,62 @@
+<!-- Używam bootstrap4 do szablonu -->
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <!-- Tworzę prosty formularz do wypełnienia danych o studencie -->
+            <form>
+                <div class="form-group">
+                    <label for="name">Imię</label>
+                    <!-- Tu używam ngModel dyrektywa, która pozwala na tzw. Two Way Binding, czyli interakcję pomiędzy szablonem a komponentem -->
+                    <!-- ngmodeloptions jest do tego żeby móc operować na pojedynczym polu obiektu student -->
+                    <input class="form-control" id="name" aria-describedby="name" placeholder="Enter name" type="text" [(ngModel)]="student.name"
+                        [ngModelOptions]="{standalone: true}">
+                </div>
+                <!-- Tak samo jak w 'name' -->
+                <div class="form-group">
+                    <label>Nazwisko</label>
+                    <input class="form-control" type="text" id="lastName" aria-describedby="lastName" placeholder="Enter lastName" type="text"
+                        [(ngModel)]="student.lastName" [ngModelOptions]="{standalone: true}">
+                </div>
+                <!-- Tak samo jak w 'index' -->
+                <div class="form-group">
+                    <label>Indeks</label>
+                    <input class="form-control" type="number" id="index" aria-describedby="index" placeholder="Enter index" type="text" [(ngModel)]="student.index"
+                        [ngModelOptions]="{standalone: true}">
+                </div>
+
+                <!-- Dropdown zrobiłem używając biblioteki '@ng-bootstrap'. Zainstalowałem ją używając npm install. Ma ona komponent DropDown, który tu
+                wykorzystuję -->
+                <div class="form-group">
+                    <div ngbDropdown class="d-inline-block">
+                        <!-- Używam *ngIf żeby wyświetlić rózne napisy w zależności od tego czy została już przypisana uczelnia.
+                        Jeśli tak to wypisuje uczelnię, jeśli nie to napis 'Uczelnia' -->
+                        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle *ngIf="!student.university">Uczelnia</button>
+                        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle *ngIf="student.university">{{ student.university }}</button>
+                        <!-- Używam *ngFor do wypisania w dropdownie wszystkich uczelni -->
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <button class="dropdown-item" *ngFor="let university of universities" (click)="setUniversity(university)">{{ university }}</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <!-- Tu wypisuje to co wpisujemy do formularza. Dane pokazują się podczas wpisywania -->
+            <div class="showInfo">
+                <div *ngIf="student.name && student.lastName">
+                    <h1>{{ student.name }} {{ student.lastName}}</h1>
+                </div>
+                <div *ngIf="student.index > 0">
+                    <h2>{{ student.index }}</h2>
+                </div>
+                <!-- Tu używam ngSwitch żeby wypisać województwo w zależności od wartości uczelni -->
+                <div [ngSwitch]="student.university">
+                    <h3 *ngSwitchCase="'Gdańsk'">{{ student.university }} - woj. pomorskie</h3>
+                    <h3 *ngSwitchCase="'Kraków'">{{ student.university }} - woj. małopolskie</h3>
+                    <h3 *ngSwitchCase="'Warszawa'">{{ student.university }} - woj. mazowieckie</h3>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
